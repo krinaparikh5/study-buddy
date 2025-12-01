@@ -1,5 +1,48 @@
 # Example schema for simple movie review app
 
+type User {
+  id: String! @default(expr: "auth.uid")
+  email: String! @col(dataType: "varchar(255)")  
+  passwordHash: String! @col(dataType: "varchar(255)")
+  wordsReviewed: Int! @default(expr: "0")       
+  averageAccuracy: Float! @default(expr: "0")  
+  streakLength: Int! @default(expr: "0")       
+  reviewFrequency: Float! @default(expr: "0")
+}
+
+type Word @table {
+  id: String! @default(expr: "uuidV4()")    # Unique ID for each word
+  text: String! @col(dataType: "varchar(100)")   #actual word
+
+  wordLength: Int! @default(expr: "0")          
+  syllableCount: Int! @default(expr: "0")       
+  difficultyScore: Float! @default(expr: "0")  
+  partOfSpeech: String! @col(dataType: "varchar(20)")  
+}
+
+type Interaction @table(name: "Interactions", key: ["user", "word"]) {
+  # Foreign key to User table
+  user: User!
+  # The user field adds the following foreign key field automatically
+  # userId: String!
+
+  # Foreign key to Word table
+  word: Word!
+  # The word field adds the following foreign key field automatically
+  # wordId: String!
+
+  timesSeen: Int! @default(expr: "0")            
+  timesCorrect: Int! @default(expr: "0")         
+  timeSinceLastSeen: Float! @default(expr: "0")
+  avgResponseTime: Float! @default(expr: "0")   
+  confidenceRating: Float! @default(expr: "0")  
+}
+
+
+
+
+
+/*
 # User table is keyed by Firebase Auth UID.
 type User @table {
   # `@default(expr: "auth.uid")` sets it to Firebase Auth UID during insert and upsert.
@@ -10,7 +53,9 @@ type User @table {
   # The `Review` join table the following many-to-many query field.
   #  movies_via_Review: [Movie!]!
 }
+*/
 
+/*
 # Movie is keyed by a randomly generated UUID.
 type Movie @table {
   # If you do not pass a 'key' to `@table`, Data Connect automatically adds the following 'id' column.
@@ -50,3 +95,4 @@ type Review @table(name: "Reviews", key: ["movie", "user"]) {
   reviewText: String
   reviewDate: Date! @default(expr: "request.time")
 }
+*/
